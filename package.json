@@ -20,7 +20,10 @@
   "dependencies": {
     "babel": "^5.8.21",
     "body-parser": "^1.13.3",
+    "camera-vc0706": "^0.1.8",
     "express": "^4.13.3",
-    "request": "^2.60.0"
+    "request": "^2.60.0",
+    "rfid-pn532": "^0.1.7",
+    "servo-pca9685": "^0.1.3"
   }
 }
