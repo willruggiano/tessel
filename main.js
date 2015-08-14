@@ -3,6 +3,11 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import fs from 'fs'
 import path from 'path'
+import tessel from 'tessel'
+
+let camera = require('./camera/camera.js'),
+    servo = require('./servo/servo.js'),
+    rfid = require('./rfid/rfid.js')
 
 let server = http.createServer()
 let app = express()
@@ -24,9 +29,25 @@ app.get('/', (req, res, next) => {
   res.status(200).sendFile(indexHtmlPath)
 })
 
+let exec = require('child_process').exec
 submit = () => {
-  let exec = require('child_process').exec
-  exec('tessel run', (error, stdout, stderr) => {
+  exec(`tessel run ${camera}`, (error, stdout, stderr) => {
+    console.log('stdout:',stdout)
+    console.log('stderr:',stderr)
+    if (error !== null) console.log('exec error:',error)
+  })
+}
+
+initialize = () => {
+  exec(`tessel run ${servo}`, (error, stdout, stderr) => {
+    console.log('stdout:',stdout)
+    console.log('stderr:',stderr)
+    if (error !== null) console.log('exec error:',error)
+  })
+}
+
+rfid = () => {
+  exec(`tessel run ${rfid}`, (error, stdout, stderr) => {
     console.log('stdout:',stdout)
     console.log('stderr:',stderr)
     if (error !== null) console.log('exec error:',error)
@@ -35,6 +56,8 @@ submit = () => {
 
 app.get('/submit', (req, res, next) => {
   submit()
+  initialize()
+  rfid()
   res.redirect('/')
   res.end()
 })
